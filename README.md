@@ -15,7 +15,7 @@
 -->
 <b>Client Script Authentication Node</b>
 <br/>
-An authentication node which executes a client-side browser Javascript, returning any configured results as a shared state object. 
+An authentication node which executes a client-side browser Javascript, returning any configured results to a shared state object. 
 <br/>
 <br/>
 <b>Installation</b>
@@ -35,8 +35,13 @@ Edit the necessary ClientScriptNode.java as appropriate.  To rebuild, run "mvn c
 <br/>
 ![ScreenShot](./clientscriptnode.png)
 <br/>
+Client Script Configuration
+<br/>
+<br/>
 ![ScreenShot](./clientscript.png)
 <br/>
+<br/>
+Example client script which gathers the browser geolocation and returns it as a JSON object:
 <br/>
 ```javascript
 collectGeolocationInfo = function (callback) {
