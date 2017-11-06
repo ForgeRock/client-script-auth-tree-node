@@ -35,13 +35,13 @@ Edit the necessary ClientScriptNode.java as appropriate.  To rebuild, run "mvn c
 <br/>
 ![ScreenShot](./clientscriptnode.png)
 <br/>
-Client Script Configuration
+<b>Client Script Configuration</b>
 <br/>
 <br/>
 ![ScreenShot](./clientscript.png)
 <br/>
 <br/>
-Example client script which gathers the browser geolocation and returns it as a JSON object:
+<b>Example client script which gathers the browser geolocation and returns it as a JSON object:</b>
 <br/>
 ```javascript
 collectGeolocationInfo = function (callback) {
