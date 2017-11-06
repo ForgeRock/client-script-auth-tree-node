@@ -1,0 +1,3 @@
+org/forgerock/openam/auth/nodes/ClientScriptNode.class
+org/forgerock/openam/auth/nodes/ClientScriptNodePlugin.class
+org/forgerock/openam/auth/nodes/ClientScriptNode$Config.class
