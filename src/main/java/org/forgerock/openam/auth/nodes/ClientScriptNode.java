@@ -32,11 +32,11 @@ import org.forgerock.json.JsonValue;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.*;
 import org.forgerock.openam.scripting.Script;
+import org.forgerock.openam.scripting.ScriptConstants;
 import org.forgerock.openam.scripting.service.ScriptConfiguration;
 import javax.security.auth.callback.Callback;
 import java.util.Optional;
 import static org.forgerock.openam.auth.node.api.Action.send;
-import static org.forgerock.openam.scripting.ScriptConstants.ScriptContext.AUTHENTICATION_CLIENT_SIDE;
 import javax.inject.Inject;
 
 
@@ -61,7 +61,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
          * @return the amount.
          */
         @Attribute(order = 100)
-        @Script(AUTHENTICATION_CLIENT_SIDE)
+        @Script(ScriptConstants.AUTHENTICATION_CLIENT_SIDE_NAME)
         ScriptConfiguration script();
 
         @Attribute(order = 200)
@@ -125,10 +125,10 @@ public class ClientScriptNode extends SingleOutcomeNode {
                         "        if (submitted) {\n" +
                         "            return;\n" +
                         "        }" +
-                        "        if (!(window.jQuery)) {\n" + // Crude detection to see if XUI is not present.
-                        "            document.forms[0].submit();\n" +
+                        "        if (!(typeof $ == 'function')) {\n" + // Crude detection to see if XUI is not present.
+                        "            document.getElementById('loginButton_0').click();\n" +
                         "        } else {\n" +
-                        "            $('input[type=submit]').trigger('click');\n" +
+                        "            $('input[type=submit]').click();\n" +
                         "        }\n" +
                         "        submitted = true;\n" +
                         "    }\n" +
