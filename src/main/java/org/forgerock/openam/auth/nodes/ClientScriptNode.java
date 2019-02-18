@@ -125,10 +125,10 @@ public class ClientScriptNode extends SingleOutcomeNode {
                         "        if (submitted) {\n" +
                         "            return;\n" +
                         "        }" +
-                        "        if (!(window.jQuery)) {\n" + // Crude detection to see if XUI is not present.
-                        "            document.forms[0].submit();\n" +
+                        "        if (!(typeof $ == 'function')) {\n" + // Crude detection to see if XUI is not present.
+                        "            document.getElementById('loginButton_0').click();\n" +
                         "        } else {\n" +
-                        "            $('input[type=submit]').trigger('click');\n" +
+                        "            $('input[type=submit]').click();\n" +
                         "        }\n" +
                         "        submitted = true;\n" +
                         "    }\n" +
