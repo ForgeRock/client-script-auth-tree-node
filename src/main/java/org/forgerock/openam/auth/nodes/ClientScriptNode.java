@@ -88,8 +88,8 @@ public class ClientScriptNode extends SingleOutcomeNode {
             newSharedState.put(config.scriptResult(), result.get());
             return goToNext().replaceSharedState(newSharedState).build();
         } else {
-            String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(config.script().getScript(), config.scriptResult(),
-                    true);
+        	String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(config.script().getScript(), config.scriptResult(),
+                    true, context.sharedState.toString());
             ScriptTextOutputCallback scriptAndSelfSubmitCallback =
                     new ScriptTextOutputCallback(clientSideScriptExecutorFunction);
 
@@ -102,7 +102,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
     }
 
     public static String createClientSideScriptExecutorFunction(String script, String outputParameterId,
-                                                                boolean clientSideScriptEnabled) {
+            boolean clientSideScriptEnabled, String context) {
         String collectingDataMessage = "";
         if (clientSideScriptEnabled) {
             collectingDataMessage = "    messenger.messages.addMessage( message );\n";
@@ -120,7 +120,8 @@ public class ClientScriptNode extends SingleOutcomeNode {
                 spinningWheelScript +
                         "(function(output) {\n" +
                         "    var autoSubmitDelay = 0,\n" +
-                        "        submitted = false;\n" +
+                        "        submitted = false,\n" +
+                        "        context = %s;\n" + //injecting context in form of JSON
                         "    function submit() {\n" +
                         "        if (submitted) {\n" +
                         "            return;\n" +
@@ -135,6 +136,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
                         "    %s\n" + // script
                         "    setTimeout(submit, autoSubmitDelay);\n" +
                         "}) (document.forms[0].elements['%s']);\n", // outputParameterId
+                context,
                 script,
                 outputParameterId);
     }
