@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * The contents of this file are subject to the terms of the Common Development and
@@ -28,7 +29,7 @@
     <description>An Authentication Tree Node for ForgeRock's Identity Platform</description>
 
     <properties>
-        <am.version>6.5.0</am.version>
+        <am.version>7.2.0</am.version>
     </properties>
 
     <dependencyManagement>
@@ -47,6 +48,14 @@
         <dependency>
             <groupId>org.forgerock.am</groupId>
             <artifactId>auth-node-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.forgerock.am</groupId>
+            <artifactId>auth-nodes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.forgerock.am</groupId>
+            <artifactId>scripting-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.forgerock.am</groupId>
@@ -84,8 +93,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>

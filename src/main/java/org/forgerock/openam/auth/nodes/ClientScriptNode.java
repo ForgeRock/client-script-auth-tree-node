@@ -25,19 +25,25 @@ package org.forgerock.openam.auth.nodes;
 import com.google.inject.assistedinject.Assisted;
 import com.sun.identity.authentication.callbacks.HiddenValueCallback;
 import com.sun.identity.authentication.callbacks.ScriptTextOutputCallback;
-import com.sun.identity.shared.debug.Debug;
+// import com.sun.identity.shared.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.*;
-import org.forgerock.openam.scripting.Script;
-import org.forgerock.openam.scripting.ScriptConstants;
-import org.forgerock.openam.scripting.service.ScriptConfiguration;
+import org.forgerock.openam.scripting.domain.Script;
+import org.forgerock.openam.scripting.persistence.config.consumer.ScriptContext;
+// import org.forgerock.openam.scripting.service.ScriptConfiguration;
+import org.forgerock.openam.authentication.service.AuthModuleScriptContext;
 import javax.security.auth.callback.Callback;
 import java.util.Optional;
 import static org.forgerock.openam.auth.node.api.Action.send;
 import javax.inject.Inject;
+import static org.forgerock.openam.auth.nodes.clientscript.AuthNodesScriptContext.AUTHENTICATION_CLIENT_SIDE;
+import static org.forgerock.openam.auth.nodes.clientscript.AuthNodesScriptContext.AUTHENTICATION_CLIENT_SIDE_NAME;
 
 
 
@@ -49,7 +55,7 @@ import javax.inject.Inject;
 public class ClientScriptNode extends SingleOutcomeNode {
 
     private final static String DEBUG_FILE = "ClientScriptNode";
-    protected Debug debug = Debug.getInstance(DEBUG_FILE);
+    protected Logger debug = LoggerFactory.getLogger(DEBUG_FILE);
     private static final String BUNDLE = "org/forgerock/openam/auth/nodes/ClientScriptNode";
 
     /**
@@ -61,8 +67,10 @@ public class ClientScriptNode extends SingleOutcomeNode {
          * @return the amount.
          */
         @Attribute(order = 100)
-        @Script(ScriptConstants.AUTHENTICATION_CLIENT_SIDE_NAME)
-        ScriptConfiguration script();
+        @ScriptContext(AUTHENTICATION_CLIENT_SIDE_NAME)
+        default Script script() {
+            return Script.EMPTY_SCRIPT;
+        }
 
         @Attribute(order = 200)
         String scriptResult();
