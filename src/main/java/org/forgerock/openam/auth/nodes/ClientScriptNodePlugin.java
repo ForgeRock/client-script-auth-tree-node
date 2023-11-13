@@ -51,7 +51,7 @@ public class ClientScriptNodePlugin extends AbstractNodeAmPlugin {
 
     @Override
     public String getPluginVersion() {
-        return "1.0.1";
+        return "1.0.2";
     }
 
     @Override
