@@ -23,12 +23,12 @@
 
     <artifactId>client-script-auth-tree-node</artifactId>
     <groupId>org.forgerock.am</groupId>
-    <version>1.0.1</version>    
+    <version>1.0.3</version>
     <name>ClientScript Authentication Node</name>
     <description>An Authentication Tree Node for ForgeRock's Identity Platform</description>
 
     <properties>
-        <am.version>6.5.0</am.version>
+        <am.version>7.5.0</am.version>
     </properties>
 
     <dependencyManagement>
