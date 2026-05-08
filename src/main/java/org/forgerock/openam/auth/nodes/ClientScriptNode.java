@@ -25,15 +25,11 @@ package org.forgerock.openam.auth.nodes;
 import com.google.inject.assistedinject.Assisted;
 import com.sun.identity.authentication.callbacks.HiddenValueCallback;
 import com.sun.identity.authentication.callbacks.ScriptTextOutputCallback;
-import com.sun.identity.shared.debug.Debug;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.*;
-import org.forgerock.openam.scripting.Script;
-import org.forgerock.openam.scripting.ScriptConstants;
-import org.forgerock.openam.scripting.service.ScriptConfiguration;
 import javax.security.auth.callback.Callback;
 import java.util.Optional;
 import static org.forgerock.openam.auth.node.api.Action.send;
@@ -48,8 +44,6 @@ import javax.inject.Inject;
     configClass = ClientScriptNode.Config.class)
 public class ClientScriptNode extends SingleOutcomeNode {
 
-    private final static String DEBUG_FILE = "ClientScriptNode";
-    protected Debug debug = Debug.getInstance(DEBUG_FILE);
     private static final String BUNDLE = "org/forgerock/openam/auth/nodes/ClientScriptNode";
 
     /**
@@ -61,8 +55,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
          * @return the amount.
          */
         @Attribute(order = 100)
-        @Script(ScriptConstants.AUTHENTICATION_CLIENT_SIDE_NAME)
-        ScriptConfiguration script();
+        String script();
 
         @Attribute(order = 200)
         String scriptResult();
@@ -88,7 +81,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
             newSharedState.put(config.scriptResult(), result.get());
             return goToNext().replaceSharedState(newSharedState).build();
         } else {
-        	String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(config.script().getScript(), config.scriptResult(),
+        	String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(config.script(), config.scriptResult(),
                     true, context.sharedState.toString());
             ScriptTextOutputCallback scriptAndSelfSubmitCallback =
                     new ScriptTextOutputCallback(clientSideScriptExecutorFunction);
@@ -135,7 +128,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
                         "    }\n" +
                         "    %s\n" + // script
                         "    setTimeout(submit, autoSubmitDelay);\n" +
-                        "}) (document.forms[0].elements['%s']);\n", // outputParameterId
+                        "})(document.getElementById('%s'));\n", // outputParameterId
                 context,
                 script,
                 outputParameterId);
