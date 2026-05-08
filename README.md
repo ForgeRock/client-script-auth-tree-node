@@ -68,6 +68,20 @@ collectGeolocationInfo(function(geolocationInfo) {
 });
 ```
 
+<!-- SUPPORT -->
+## Support
+
+If you encounter any issues, be sure to check our https://docs.pingidentity.com/ pages.
+
+Support tickets can be raised whenever you need our assistance; here are some examples of when it is appropriate to open a ticket (but not limited to):
+
+* Suspected bugs or problems with Ping Identity software.
+* Requests for assistance
+
+You can raise a ticket using **[Ping Identity Support Portal](https://support.pingidentity.com/s/)**, our customer support portal that provides one stop access to Ping Identity services.
+
+<!-- COLLABORATION -->
+
 ## Disclaimer
 The sample code described herein is provided on an "as is" basis, without warranty of any kind, to the fullest extent permitted by law. ForgeRock does not warrant or guarantee the individual success developers may have in implementing the sample code on their development platforms or in production configurations.
 
