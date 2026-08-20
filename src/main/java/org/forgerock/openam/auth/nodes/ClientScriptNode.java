@@ -30,6 +30,9 @@ import com.google.common.collect.ImmutableList;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.*;
+import org.forgerock.openam.scripting.domain.Script;
+import org.forgerock.openam.scripting.domain.ScriptingLanguage;
+import org.forgerock.openam.scripting.persistence.config.consumer.ScriptContext;
 import javax.security.auth.callback.Callback;
 import java.util.Optional;
 import static org.forgerock.openam.auth.node.api.Action.send;
@@ -47,15 +50,26 @@ public class ClientScriptNode extends SingleOutcomeNode {
     private static final String BUNDLE = "org/forgerock/openam/auth/nodes/ClientScriptNode";
 
     /**
+     * The script type whose scripts are offered in the {@code script} dropdown. Matches the
+     * "Client-side Authentication" script context, so only JavaScript scripts saved under that
+     * type in Realms &gt; Scripts are selectable.
+     */
+    private static final String CLIENT_SIDE_SCRIPT_CONTEXT = "AUTHENTICATION_CLIENT_SIDE";
+
+    /**
      * Configuration for the node.
      */
     public interface Config {
         /**
-         * The amount to increment/decrement the auth level.
-         * @return the amount.
+         * The client-side script to execute, selected from the scripts registered against the
+         * Client-side Authentication script context.
+         * @return the script.
          */
         @Attribute(order = 100)
-        String script();
+        @ScriptContext(CLIENT_SIDE_SCRIPT_CONTEXT)
+        default Script script() {
+            return Script.EMPTY_SCRIPT;
+        }
 
         @Attribute(order = 200)
         String scriptResult();
@@ -81,8 +95,16 @@ public class ClientScriptNode extends SingleOutcomeNode {
             newSharedState.put(config.scriptResult(), result.get());
             return goToNext().replaceSharedState(newSharedState).build();
         } else {
-        	String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(config.script(), config.scriptResult(),
-                    true, context.sharedState.toString());
+            Script script = config.script();
+            if (script == null || Strings.isNullOrEmpty(script.getScript())) {
+                throw new NodeProcessException("No client script has been selected for this node");
+            }
+            if (script.getLanguage() != ScriptingLanguage.JAVASCRIPT) {
+                throw new NodeProcessException("Client-side scripts must be written in JavaScript, but script '"
+                        + script.getName() + "' is " + script.getLanguage());
+            }
+            String clientSideScriptExecutorFunction = createClientSideScriptExecutorFunction(script.getScript(),
+                    config.scriptResult(), true, context.sharedState.toString());
             ScriptTextOutputCallback scriptAndSelfSubmitCallback =
                     new ScriptTextOutputCallback(clientSideScriptExecutorFunction);
 
@@ -93,6 +115,7 @@ public class ClientScriptNode extends SingleOutcomeNode {
             return send(callbacks).build();
         }
     }
+
 
     public static String createClientSideScriptExecutorFunction(String script, String outputParameterId,
             boolean clientSideScriptEnabled, String context) {
