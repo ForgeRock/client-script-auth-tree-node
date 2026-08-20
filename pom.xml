@@ -23,12 +23,14 @@
 
     <artifactId>client-script-auth-tree-node</artifactId>
     <groupId>org.forgerock.am</groupId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <name>ClientScript Authentication Node</name>
     <description>An Authentication Tree Node for ForgeRock's Identity Platform</description>
 
     <properties>
-        <am.version>7.5.0</am.version>
+        <am.version>7.5.2</am.version>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencyManagement>
@@ -60,6 +62,12 @@
             <groupId>org.forgerock.am</groupId>
             <artifactId>openam-scripting</artifactId>
         </dependency>
+        <!-- Provides org.forgerock.openam.scripting.domain.Script and the @ScriptContext
+             config annotation used to render the script picker in the node's UI. -->
+        <dependency>
+            <groupId>org.forgerock.am</groupId>
+            <artifactId>scripting-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -82,10 +90,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
         </plugins>
